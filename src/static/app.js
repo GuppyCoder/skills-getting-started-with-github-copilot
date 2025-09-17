@@ -18,14 +18,35 @@ document.addEventListener("DOMContentLoaded", () => {
         const activityCard = document.createElement("div");
         activityCard.className = "activity-card";
 
-        const spotsLeft = details.max_participants - details.participants.length;
+        const participants = Array.isArray(details.participants) ? details.participants : [];
+        const spotsLeft =
+          details.max_participants - participants.length;
 
         activityCard.innerHTML = `
           <h4>${name}</h4>
           <p>${details.description}</p>
           <p><strong>Schedule:</strong> ${details.schedule}</p>
           <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          <div class="participants-section">
+            <h5 class="participants-title">Participants (${participants.length}/${details.max_participants})</h5>
+            <ul class="participants-list"></ul>
+          </div>
         `;
+
+        // Populate participants list
+        const ul = activityCard.querySelector(".participants-list");
+        if (participants.length > 0) {
+          participants.forEach((p) => {
+            const li = document.createElement("li");
+            li.textContent = p;
+            ul.appendChild(li);
+          });
+        } else {
+          const li = document.createElement("li");
+          li.className = "empty";
+          li.textContent = "No participants yet";
+          ul.appendChild(li);
+        }
 
         activitiesList.appendChild(activityCard);
 
